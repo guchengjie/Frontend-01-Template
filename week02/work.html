@@ -26,9 +26,9 @@
             const hexVal = parseInt(hex, 16);
             bytes.push(hexVal);
             i += 2;
-        } else bytes.push(`\\x${c.charCodeAt(0).toString(16)}`);
+        } else bytes.push(c.charCodeAt(0));
     }
-    return bytes;
+    return new Uint8Array(bytes).buffer;
   }
   encodeUtf8('hello world');
   // 写一个正则表达式，匹配所有的字符串直接量，单引号和双引号
