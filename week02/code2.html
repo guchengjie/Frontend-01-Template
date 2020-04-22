@@ -1,0 +1,71 @@
+<script>
+  for (let i; i < 128; i++) {
+    console.log(String.fromCharCode(i));
+  }
+
+
+
+
+  var a = 0.1;
+  var b = 0.2;
+  const memory = new Float32Array(1);
+  memory[0] = a;
+
+  const intarr = new Uint8Array(memory.buffer);
+  console.log(intarr);
+
+  // Number
+  console.log(00010);
+
+  console.log(0o24);
+  console.log(0b11);
+  console.log(0xe4);
+  console.log(0.);
+  console.log(00);
+  console.log(.0);
+  console.log(parseInt('09'));
+
+  // String
+  console.log(97 .toString(2));
+
+// 1  按照代码的执行顺序放入调用堆栈
+// 2  promise放入工作队列中, ECMAScript 2015引入了作业队列的概念，在消息队列前执行
+// 3  setTimeout放入消息队列中,并启动定时器，到时间就推到调用堆栈执行
+// 在循环此顺序     1  》 2 》 3 》 1
+  console.log('script start');              // 1
+  setTimeout(function() {
+    console.log('setTimeout');              // 3
+  }, 0);
+  new Promise((resolve, reject) => {
+    console.log('promise111');              // 1 Promise构造函数时立即执行的
+    resolve(23233);
+  }).then((res) => {                        // 2  当前循环
+    console.log(res);
+  })
+  Promise.resolve().then(function() {
+    console.log('promise1');                // 2  当前循环
+    return Promise.resolve(111);            // 2  推到promise2-2后面执行
+  }).then(function(val) {
+    console.log(val);
+    console.log('promise1-2');
+  });
+  Promise.resolve().then(function() {
+    setTimeout(function() {                 // 3
+     console.log('promise2');}
+    ,0);
+  }).then(function() {
+    console.log('promise2-2');              // 2  当前循环
+  });
+  console.log('script end');               // 1
+// script start
+// promise111
+// script end
+// 23233
+// promise1
+// promise2-2
+// 111
+// promise1-2
+// setTimeout
+// promise2
+
+</script>

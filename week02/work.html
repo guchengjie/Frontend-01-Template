@@ -1,0 +1,20 @@
+<script>
+  // 写一个正则表达式 匹配所有 Number 直接量
+  // -34 0 0. .0 0b01 0o12 0x12 34e3 34E3 3.4e-9 34E-10
+  const BinaryDigitReg = /0[Bb][01]+/;
+  BinaryDigitReg.test('0b11');
+
+  const OctonaryDigitReg = /0[Oo][0-7]+/;
+  OctonaryDigitReg.test('0o34');
+
+  const HexadecimalDigitReg = /0[Xx][0-9A-Fa-f]+/;
+  HexadecimalDigitReg.test('0xef');
+
+  const DecimalDigitReg = /-?(0|[1-9][0-9]+)?\.?([0-9]*[Ee]?[+-]?[0-9]+)?/;
+  DecimalDigitReg.test('-5435.345e+23');
+
+  const NumberDigitReg = /(-?(0|[1-9][0-9]+)?\.?([0-9]*[Ee]?[+-]?[0-9]+)?)|0[Bb][01]+|0[Oo][0-7]+|0[Xx][0-9A-Fa-f]+/;
+
+  // 写一个 UTF-8 Encoding 的函数
+  // 写一个正则表达式，匹配所有的字符串直接量，单引号和双引号
+</script>
