@@ -43,8 +43,43 @@
 
     return integer + '.' + decimal;
   }
-
   convertStringToNumber('1234.545', 8);
+
+
+  // JavaScript 标准里所有的对象,无法实现
+  /*
+    Bound Function
+      [[Call]]
+      [[Construct]]
+    Array Objects
+      [[DefineOwnProperty]]
+      [[length]]
+    String Objects
+      [[GetOwnProperty]]
+      [[DefineOwnProperty]]
+      [[OwnPropertyKeys]]
+    Arguments Objects
+      [[GetOwnProperty]]
+      [[DefineOwnProperty]]
+      [[Get]]
+      [[Set]]
+      [[Delete]]
+      [[HasProperty]]
+      [[OwnPropertyKeys]]
+    Module Namespace Objects
+      [[Module]]
+      [[Exports]]
+      [[Prototype]]
+      [[SetPrototypeOf]]
+      [[IsExtensible]]
+      [[PreventExtensions]]
+      [[GetOwnProperty]] 
+      [[DefineOwnProperty]]
+      [[HasProperty]]
+    Immutable Prototype Exotic Objects
+      [[SetPrototypeOf]]
+  */
+
 
 </script>
 <!-- <div id="app">
