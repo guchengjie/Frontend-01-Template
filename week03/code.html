@@ -1,0 +1,109 @@
+<script>
+  // 1、JavaScript | 表达式，类型准换
+  // 根据这节课上讲师已写好的部分，补充写完函数 convertStringToNumber
+  // 以及函数 convertNumberToString
+  // 2 、JavaScript | 语句，对象
+  // 根据课上老师的示范，找出 JavaScript 标准里所有的对象，分析有哪些对象是我们无法实现出来的，这些对象都有哪些特性？写一篇文章，放在学习总结里。
+
+  function convertNumberToString(num, radix) {
+    let integer = Math.floor(num);
+    let decimal = num - integer;
+    let str = !integer ? '0' : '';
+    while(integer > 0) {
+      str = String(integer % radix) + str;
+      integer = Math.floor(integer / radix);
+    }
+    if (decimal) {
+      str += '.';
+      while(decimal && !/\.[0-9]{18}/.test(str)) {
+        decimal *= radix;
+        str += String(Math.floor(decimal));
+        decimal -= Math.floor(decimal);
+      }
+    }
+
+    return str;
+  }
+  console.log(convertNumberToString(1234.545, 8)); // 2322.4270243656051
+
+  function convertStringToNumber(str, radix) {
+    const zeroCodePoint = '0'.codePointAt(0);
+    let integer = 0;
+    let decimal = 0;
+    let i = 0;
+    for (; i < str.length && i !== '.'; i += 1) {
+      integer *= radix;
+      integer += str[i].codePointAt(0) - zeroCodePoint;
+    }
+
+    for (let q = str.length - 1; q > i; q -= 1) {
+      decimal += str[q].codePointAt(0) - zeroCodePoint;
+      decimal /= radix;
+    }
+
+    return integer + '.' + decimal;
+  }
+
+  convertStringToNumber('1234.545', 8);
+
+</script>
+<!-- <div id="app">
+  <span v-for="v, i of bits">
+    <input :class="i > 0 ? i > 11 ? 'fraction' :'exponent':'sign' "  type="number" min=0 max=1 v-model="bits[i]"/>
+    <input v-if="i == 31" />
+    <br v-if="i == 31" />
+  </span>
+  <br />
+  <input style="width:5em;" v-model="value"/>
+</div>
+
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+.container input[type='number']{
+    -moz-appearance: textfield;
+}
+span {
+  padding:0;
+  margin:0;
+}
+input {
+  width:1em;
+  height:2em;
+  text-align:center;
+}
+.sign {
+  background-color: lightblue;
+} 
+.exponent {
+  background-color: orange;
+} 
+
+
+
+window.vm = new Vue({
+  el: '#app',
+  data: {
+    bits: Array(65).join(0).split("").map(v => Number(v)),
+    value: 0
+  },
+  watch: {
+    value(val){
+      const bytes = new Uint8Array(8);
+      const memory = new Float64Array(bytes.buffer);
+      memory[0] = (val);
+      console.log("******");
+      for(var i = 0; i < 8; i++) {
+        var byte = bytes[i]
+        console.log(byte);
+        for(var j = 0; j < 8; j ++) {
+            this.bits[(8 - i) * 8 - j - 1] = byte & 1;
+            byte = byte >> 1;
+        }
+      }
+    }
+  }
+}) -->

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <span id="setData" data-custum-data=''></span>
+  <script>
+    window.onload = function() {
+      // JavaScript 启动后，内存中有多少个对象？如何用代码来获得这些信息？
+      function callback(initObj) {
+        for (let key in initObj) {
+          if (typeof initObj[key] === 'object') {
+            // callback(initObj[key]);
+            console.log('key:', key);
+          }
+        }
+      }
+      callback(window);
+    }
+    // 4 HTML 的中，如何写一个值为 “a”=‘b’ 的属性值？
+    const dataDom = document.querySelector('#setData');
+    dataDom.dataset.custumData = JSON.stringify("a") + JSON.parse(JSON.stringify("='b'"));
+  </script>
+</body>
+</html>

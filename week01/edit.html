@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>edit iframe</title>
+  <meta descript="编写一个 DOM 编辑器：可以自由地操作一个 iframe（空白）中的 DOM 结构，包括增、删、移动。">
+</head>
+<body>
+  <iframe id="box" frameborder="0" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
+  添加的dom元素：<input name="tag" type="text">
+  <!-- <p>
+    <i>tools:</i>
+    <button id="all">全选</button>
+    <button id="noAll">全不选</button>
+  </p> -->
+  <p>
+    <strong>操作 : </strong>
+    <button id="add">添加</button>
+    <button id="delet">删除</button>
+    <button id="move">移动</button>
+  </p>
+  <script>
+    ;window.onload = function() {
+      const add = document.querySelector('#add');
+      const delet = document.querySelector('#delet');
+      const move = document.querySelector('#move');
+      const box = document.querySelector('#box');
+      const container = box.contentDocument.body;
+      // func callback
+      function addCall(e) {
+        const tag = document.querySelector('input[name="tag"]');
+        try {
+          const creatEle = document.createElement(tag.value);
+          creatEle.innerHTML = tag.value + '-' + Date.now();
+          const colorList = ['red', 'blue', 'orchid', 'green', 'aqua', 'coral'];
+          const color = colorList[Math.floor(Math.random() * 6)];
+          creatEle.style = `color: ${color};margin-right: 5px;margin-top: 10px;display:inline-block;cursor: pointer`;
+          container.appendChild(creatEle);
+        } catch (error) {
+          console.log('当前tag不存在!', error);
+        }
+      }
+
+      function deletCall(e) {
+        const selectListNode = container.querySelectorAll('.active');
+        selectListNode.forEach(function(node) {
+          container.removeChild(node);
+        });
+      }
+
+      function moveCall(e) {
+
+      }
+
+      // add eventListen
+      container.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const target = e.target;
+        const isActive = target.classList.contains('active');
+        if (target.nodeName !== 'BODY') {
+          if (!isActive) {
+            target.style.border = "1px solid skyblue";
+            target.classList.add('active');
+          } else {
+            target.style.border = "none";
+            target.classList.remove('active');
+          }
+        }
+      });
+      add.addEventListener('click', addCall);
+      delet.addEventListener('click', deletCall);
+      move.addEventListener('click', moveCall);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>edit iframe</title>
+  <meta descript="编写一个 DOM 编辑器：可以自由地操作一个 iframe（空白）中的 DOM 结构，包括增、删、移动。">
+  <style>
+    .flex {
+      display: -webkit-flex;
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    .flex-1 {
+      flex: 1 1;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex">
+    <div class="flex-1">
+      <textarea name="" id="editBox" cols="100" rows="35"></textarea>
+    </div>
+    <div class="flex-1">
+      <iframe id="box" frameborder="0" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
+    </div>
+  </div>
+  <script>
+    ;window.onload = function() {
+      const editBox = document.querySelector('#editBox');
+      const box = document.querySelector('#box');
+      const container = box.contentDocument.body;
+
+      editBox.addEventListener('input', function(e) {
+        const target = e.target;
+        console.log(target.value);
+        container.innerHTML = target.value;
+      });
+    }
+  </script>
+</body>
+</html>
