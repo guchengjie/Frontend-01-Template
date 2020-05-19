@@ -1,4 +1,5 @@
 const net = require('net');
+const parser = require('./parser.js');
 
 let connection = null;
 class Request {
@@ -18,7 +19,6 @@ class Request {
     } else if (this.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       this.bodyText = Object.keys(this.body).map((i) => `${i}=${encodeURIComponent(this.body[i])}`).join('&');
     }
-
     this.headers['Content-Length'] = this.bodyText.length;
   }
 
@@ -33,6 +33,7 @@ ${this.bodyText}
 
   send() {
     return new Promise((resolve, reject) => {
+      const parse = new ResponseParser();
       if (connection) {
         connection.write(this.toString());
       } else {
@@ -45,9 +46,10 @@ ${this.bodyText}
       }
       
       connection.on('data', (data) => {
-        const a = new ResponseParser();
-        a.receive(data.toString());
-        resolve(data.toString());
+        parse.receive(data.toString());
+        if (parse.isFinish) {
+          resolve(parse.response);
+        }
         connection.end();
       });
       
@@ -61,10 +63,6 @@ ${this.bodyText}
       });
     });
   }
-}
-
-class Response{
-
 }
 
 class ResponseParser {
@@ -84,6 +82,20 @@ class ResponseParser {
     this.headerName = '';
     this.headerValue = '';
     this.bodyParser = null;
+  }
+
+  get isFinish() {
+    return this.bodyParser && this.bodyParser.isFinish;
+  }
+
+  get response() {
+    this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+    return {
+      statusCode: RegExp.$1,
+      statusText: RegExp.$2,
+      headers: this.headers,
+      body: this.bodyParser.content.join('')
+    }
   }
 
   receive(str) {
@@ -193,11 +205,11 @@ void async function() {
     port: '9001',
     headers: {
       'X-ff-cc': 'check',
-      body: { name: 'mrgu' }
-    }
+    },
+    body: { name: 'mrgu' }
   });
   const resp = await req.send();
-  // console.log(resp);
+  const dom = parser.parseHtml(resp.body);
 }();
 
 // const client = net.createConnection({
