@@ -1,0 +1,35 @@
+<script>
+  // ababx 的字符串状态机匹配是否存在
+  function match(pattern, char) {
+    let idx = 0;
+    function generateStatusFunc() {
+      return function(c) {
+        if (c === pattern[idx]) {
+          if (idx <= pattern.length -1) {
+            idx += 1;
+            return generateStatusFunc();
+          } else {
+            console.log(idx);
+            return end;
+          }
+        } else {
+          idx = 0;
+          return generateStatusFunc();
+        }
+      }
+    }
+
+    let state = generateStatusFunc();
+    for (let c of char) {
+      state = state(c);
+    }
+    console.log(state);
+    return state === end;
+  }
+
+  console.log(match('ababx', 'adas dfabababcabababx asdf'));
+
+  function end(c) {
+    return end;
+  }
+</script>

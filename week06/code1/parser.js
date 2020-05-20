@@ -1,20 +1,126 @@
 const EOF = Symbol('EOF'); //EOF: end of file
 let currentToken = null; // 全局tag变量
 let currentAttribute = null; // 全局属性
+let currentTextNode = null; // 文本节点
+const stack = [{ type: 'document', children:[] }];
+const css = require('css');
+const rules = []; // 存储css解析规则
+
+const addCSSRules = function(code) {
+  const ast = css.parse(code);
+  // console.log(JSON.stringify(ast, null, 4));
+  rules.push(...ast.stylesheet.rules);
+}
+
+const match = function(element, selector) {
+  if (!element.attributes || !selector) return false;
+
+  if (selector.charAt(0) === '#') {
+    const attr = element.attributes.filter((attr) => attr.name === 'id')[0];
+    if (attr && attr.value === selector.replace('#', '')) {
+      return true;
+    }
+  } else if (selector.charAt(0) === '.') {
+    const attr = element.attributes.filter((attr) => attr.name === 'class')[0];
+    if (attr && attr.value === selector.replace('.', '')) {
+      return true;
+    }
+  } else if (element.tagName === selector) {
+    return true;
+  }
+  return false;
+}
+
+const computeCSS = function(element) {
+  if (!element.computedStyle) {
+    element.computedStyle = {};
+  }
+  const elements = stack.slice().reverse();
+
+  for (let rule of rules) {
+    const selectorParts = rule.selectors[0].split(' ').reverse();
+    if (!match(element, selectorParts[0])) continue;
+    let isMatch = false;
+    let y = 1;
+    for (let i = 0, len = elements.length; i < len; i += 1) {
+      if (match(elements[i], selectorParts[y])) {
+        y++;
+      }
+    }
+
+    if (y >= selectorParts.length) isMatch = true;
+
+    if (isMatch) {
+      const computedStyle = element.computedStyle;
+      for (let declaration of rule.declarations) {
+        if (!computedStyle[declaration.property]) {
+          computedStyle[declaration.property] = {};
+        }
+        computedStyle[declaration.property].value = declaration.value;
+      }
+      console.log(element);
+    }
+  }
+}
 
 const emit = function(token) {
-  // if (token.type !== 'text') 
-  console.log(token);
+  const top = stack[stack.length - 1];
+
+  if (token.type === 'startTag') {
+    let element = {
+      type: 'element',
+      attributes: [],
+      children: [],
+    }
+    for (key in token) {
+      if (key !== 'type' && key !== 'tagName' && key !== 'isSelfClosing') {
+        element.attributes.push({
+          name: key,
+          value: token[key],
+        })
+      }
+    }
+    element.tagName = token.tagName;
+    top.children.push(element);
+    element.parent = top;
+
+    computeCSS(element);
+
+    if (!token.isSelfClosing) {
+      stack.push(element);
+    }
+    currentTextNode = null;
+  } else if (token.type === 'endTag') {
+    if (token.tagName !== top.tagName) {
+      console.log('element start and end Tag no matches!');
+    } else {
+      if (token.tagName === 'style') {
+        addCSSRules(top.children[0].content);
+      }
+      stack.pop();
+    }
+    currentTextNode = null;
+  } else if (token.type === 'text') {
+    if (currentTextNode === null) {
+      currentTextNode = {
+        type: 'text',
+        content: '',
+      }
+      top.children.push(currentTextNode);
+    }
+    currentTextNode.content += token.content;
+  }
 }
 
 const selfClosingStartTag = function(c) {
   if (c === '>') {
     currentToken.isSelfClosing = true;
+    emit(currentToken);
     return data;
   } else if(c === EOF) {
     return data(EOF);
   } else {
-    // beforeAttributeName(c);
+    beforeAttributeName(c);
   }
 }
 
@@ -32,23 +138,27 @@ const beforeAttributeName = function(c) {
   }
 }
 
-const afterAttributeValue = function(c) {
+const afterQuotedAttributeValue = function(c) {
   if (c.match(/^[\n\t\f ]$/)) {
     return beforeAttributeName;
   } else if (c === '/') {
     return selfClosingStartTag;
-  }  else if (c === '>') {
+  } else if (c === '>') {
+    currentToken[currentAttribute.name] = currentAttribute.val;
+    emit(currentToken);
     return data;
-  }  else if (c === EOF) {
+  } else if (c === EOF) {
     return data(EOF);
   } else {
+    currentAttribute.val += c.toLowerCase();
     return beforeAttributeName(c);
   }
 }
 
 const doubleQuotedAttributeValue = function(c) {
   if (c === '\"') {
-    return afterAttributeValue;
+    currentToken[currentAttribute.name] = currentAttribute.val;
+    return afterQuotedAttributeValue;
   } else if (c === '&') {
     return doubleQuotedAttributeValue;
   } else if (c === EOF) {
@@ -61,7 +171,8 @@ const doubleQuotedAttributeValue = function(c) {
 
 const singleQuotedAttributeValue = function(c) {
   if (c === '\'') {
-    return afterAttributeValue;
+    currentToken[currentAttribute.name] = currentAttribute.val;
+    return afterQuotedAttributeValue;
   } else if (c === '&') {
     return singleQuotedAttributeValue;
   } else if (c === EOF) {
@@ -74,11 +185,18 @@ const singleQuotedAttributeValue = function(c) {
 
 const unquotedAttributeValue = function(c) { // 无引号状态
   if (c.match(/^[\n\t\f ]$/)) {
+    currentToken[currentAttribute.name] = currentAttribute.val;
+    emit(currentToken);
     return beforeAttributeName;
   } else if (c === '&') {
+    currentToken[currentAttribute.name] = currentAttribute.val;
     return unquotedAttributeValue;
   } else if (c === '>') {
+    currentToken[currentAttribute.name] = currentAttribute.val;
+    emit(currentToken);
     return data;
+  } else if (c === '\u0000') {
+
   } else if (c === '\'' || c === '\"' || c === '<' || c === '=' || c === '\`') {
 
   } else if (c === EOF) {
@@ -98,7 +216,7 @@ const beforeAttributeValue = function(c) {
   } else if (c === '>') {
     return data;
   } else {
-    return unquotedAttributeValue;
+    return unquotedAttributeValue(c);
   }
 }
 
@@ -109,6 +227,7 @@ const afterAttributeName = function(c) {
   } else if (c === '=') {
     return beforeAttributeValue;
   } else if (c === '>') {
+    // emit(currentToken);
     return data;
   } else if (c === EOF) {
     return data(EOF);
@@ -173,8 +292,10 @@ const tagOpen = function(c) {
       tagName: '',
     }
     return tagName(c); // // 切换到tag的状态处理函数
+  } else if (c === EOF) {
+    return data(EOF);
   } else {
-    return;
+    return data(c);
   }
 }
 
@@ -193,7 +314,6 @@ const data = function(c) {
 module.exports.parseHtml = function(html) {
   let state = data;
   for (let c of html) {
-    console.log(state);
     state = state(c);
   }
   state = state(EOF);

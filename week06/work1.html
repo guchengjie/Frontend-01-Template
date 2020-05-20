@@ -1,0 +1,79 @@
+<script>
+  // ababx 的字符串状态机匹配是否存在
+  function match(char) {
+    let state = start();
+    for (let c of char) {
+      state = state(c);
+    }
+    return state === end;
+  }
+  console.log(match('adas dfabababcabababx asdf'));
+  function start(c) {
+    if (c === 'a') {
+      return foundA1;
+    } else {
+      return start;
+    }
+  }
+
+  function end(c) {
+    return end;
+  }
+
+  function foundA1(c) {
+    if (c === 'b') {
+      return fundB1;
+    } else {
+      return start(c);
+    }
+  }
+
+  function fundB1(c) {
+    if (c === 'a') {
+      return fundA2;
+    } else {
+      return start(c);
+    }
+  }
+
+  function fundA2(c) {
+    if (c === 'b') {
+      return fundB2;
+    } else {
+      return start(c);
+    }
+  }
+
+  function fundB2(c) {
+    if (c === 'a') {
+      return fundA3;
+    } else {
+      return fundB1(c);
+    }
+  }
+
+  function fundA3(c) {
+    if (c === 'b') {
+      return fundB3;
+    } else {
+      return start(c);
+    }
+  }
+
+  function fundB3(c) {
+    if (c === 'x') {
+      return fundX(c);
+    } else {
+      return fundB2(c);
+    }
+  }
+
+  function fundX(c) {
+    if (c === 'x') {
+      return end;
+    } else {
+      return start(c);
+    }
+  }
+  
+</script>
