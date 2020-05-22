@@ -31,6 +31,34 @@ const match = function(element, selector) {
   return false;
 }
 
+const specificity = function(selectors) {
+  const sf = [0, 0, 0, 0];
+  const selectorParts = selectors.split(' ');
+  for (let selector of selectorParts) {
+    if (selector.charAt(0) === '#') {
+      sf[1] += 1;
+    } else if (selector.charAt(0) === '.') {
+      sf[2] += 1;
+    } else {
+      sf[3] += 1;
+    }
+  };
+  return sf;
+}
+
+const compare = function(oldSp, sp) {
+  if (oldSp[0] - sp[0]) {
+    return oldSp[0] - sp[0];
+  }
+  if (oldSp[1] - sp[1]) {
+    return oldSp[1] - sp[1];
+  }
+  if (oldSp[2] - sp[2]) {
+    return oldSp[2] - sp[2];
+  }
+  return oldSp[3] - sp[3];
+}
+
 const computeCSS = function(element) {
   if (!element.computedStyle) {
     element.computedStyle = {};
@@ -51,14 +79,20 @@ const computeCSS = function(element) {
     if (y >= selectorParts.length) isMatch = true;
 
     if (isMatch) {
+      const sp = specificity(rule.selectors[0]);
       const computedStyle = element.computedStyle;
       for (let declaration of rule.declarations) {
         if (!computedStyle[declaration.property]) {
           computedStyle[declaration.property] = {};
         }
-        computedStyle[declaration.property].value = declaration.value;
+        if (!computedStyle[declaration.property].specificity) {
+          computedStyle[declaration.property].specificity = sp;
+          computedStyle[declaration.property].value = declaration.value;
+        } else if (compare(computedStyle[declaration.property].specificity, sp) < 0) {
+          computedStyle[declaration.property].value = declaration.value;
+          computedStyle[declaration.property].specificity = sp;
+        }
       }
-      console.log(element);
     }
   }
 }
@@ -69,7 +103,7 @@ const emit = function(token) {
   if (token.type === 'startTag') {
     let element = {
       type: 'element',
-      attributes: [],
+      attributes: [], 
       children: [],
     }
     for (key in token) {
@@ -84,7 +118,7 @@ const emit = function(token) {
     top.children.push(element);
     element.parent = top;
 
-    computeCSS(element);
+    computeCSS(element); // 获取style和link下载的样式
 
     if (!token.isSelfClosing) {
       stack.push(element);
@@ -317,4 +351,5 @@ module.exports.parseHtml = function(html) {
     state = state(c);
   }
   state = state(EOF);
+  return stack[0];
 }

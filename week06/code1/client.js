@@ -210,6 +210,7 @@ void async function() {
   });
   const resp = await req.send();
   const dom = parser.parseHtml(resp.body);
+  console.log(dom);
 }();
 
 // const client = net.createConnection({
