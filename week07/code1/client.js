@@ -1,5 +1,7 @@
 const net = require('net');
+const images = require('images');
 const parser = require('./parser.js');
+const render = require('./render.js');
 
 let connection = null;
 class Request {
@@ -210,7 +212,12 @@ void async function() {
   });
   const resp = await req.send();
   const dom = parser.parseHtml(resp.body);
-  console.log(dom);
+
+  let viewport = images(800, 600);
+
+  render(viewport, dom.children[0].children[3].children[1].children[1]);
+  viewport.save('page.jpg');
+  // console.log(dom);
 }();
 
 // const client = net.createConnection({

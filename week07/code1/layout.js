@@ -275,7 +275,7 @@ module.exports = (element) => {
     crossBase = 0;
   }
 
-  let lineSize = style[crossSize] / flexLines.length;
+  // let lineSize = style[crossSize] / flexLines.length;
   let step = 0;
 
   if (style.alignContent === 'flex-start') {
@@ -312,7 +312,7 @@ module.exports = (element) => {
       let itemStyle = getStyle(item);
       let align = itemStyle.alignSelf || style.alignItems;
 
-      if (itemStyle[crossSize] === null) {
+      if (itemStyle[crossSize] === null || itemStyle[crossSize] === undefined) {
         itemStyle[crossSize] = align === 'stretch' ? lineCrossSize : 0;
       }
 

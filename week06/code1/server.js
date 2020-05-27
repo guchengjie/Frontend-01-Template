@@ -15,12 +15,16 @@ const server = http.createServer((req, res) => {
                 width: 500px;
                 height: 300px;
                 display: flex;
+                background: #fff;
             }
             #container #myid {
                 width: 200px;
+                height: 100px;
+                background: red;
             }
             #container .c1 {
                 flex: 1;
+                background: green;
             }
         </style>
     </head>

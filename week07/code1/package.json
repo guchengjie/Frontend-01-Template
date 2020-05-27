@@ -11,6 +11,7 @@
   "author": "mrgu <1147773200@qq.com>",
   "license": "ISC",
   "dependencies": {
-    "css": "^2.2.4"
+    "css": "^2.2.4",
+    "images": "^3.0.2"
   }
 }
