@@ -38,7 +38,7 @@
       const parentNodes = getParentNodes(element);
       const parseSelect = getParseSelect(selector);
       for (let i = 0, len = parseSelect.length; i < len; i++) {
-        // todo matchSingleEle
+        // todo
         const flag = matchSingleEle(parseSelect[i], parentNodes[i]);
         if (!flag) return false;
       }
