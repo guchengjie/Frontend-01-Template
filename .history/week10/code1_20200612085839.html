@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dom 逆序</title>
+</head>
+<body>
+  <div id="box">
+    <span>aaa</span>
+    <div>bbb</div>
+    <h2>ccc</h2>
+    <p>ddd</p>
+  </div>
+  <script>
+    window.onload = function() {
+      const box = document.getElementById('box');
+      // for (let i=0, len = box.children.length; i < len; i += 1) {
+      //   box.appendChild(box.children[i]);
+      // }
+      const range = new Range();
+      range.selectNodeContents(box);
+      const childNodes = range.extractContents();
+      let len = childNodes.length;
+      console.log(childNodes, len);
+      while (len-- > 0) {
+        console.log(len);
+        range.appendChild(childNodes[len]);
+      }
+      box.append(range);
+    }
+  </script>
+</body>
+</html>

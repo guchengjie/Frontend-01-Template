@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .chessboard {
+      width: 300px;
+      height: 300px;
+    }
+    .chessboard div {
+      background: green;
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box" class="chessboard">
+
+  </div>
+  <script>
+    window.onload = function() {
+      // 1 是圆圈  2是红叉
+      const chessboard = [
+        [2, 0, 0],
+        [0, 1, 0],
+        [0, 0, 0],
+      ];
+      const container = document.getElementById('box');
+      ⭕️❌
+      chessboard.forEach((item) => {
+        const cell = document.createElement('div');
+        container.appendChild(cell);
+      });
+    }
+  </script>
+</body>
+</html>
