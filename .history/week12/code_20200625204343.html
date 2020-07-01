@@ -1,0 +1,39 @@
+<script>
+  const reg = /([0-9/.]+)|([ ]+)|([\r\n]+)|([\+])|([\-])|([\*])|([\/])/g;
+  const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
+
+  function tokenize(source) {
+    let result = null;
+    let lastIndex = 0;
+
+    do {
+      lastIndex = reg.lastIndex;
+      result = reg.exec(source);
+      if (!result) break;
+
+      if (reg.lastIndex - lastIndex > result[0].length) {
+        throw new Error(`Unexpect token ${}`);
+      }
+
+      let token = {
+        type: null,
+        value: null,
+      }
+
+      for (let i = 0; i < dictionary.length; i++) {
+        if (result[i + 1]) {
+          token.type = dictionary[i];
+        }
+      }
+
+      token.value = result[0];
+
+      yield token;
+
+    } while(result);
+  }
+
+  for (let token of tokenize('1024 + 10 * 25')) {
+    console.log(token);
+  }
+</script>

@@ -1,0 +1,22 @@
+<script>
+  const reg = /([0-9/.]+)|([ ]+)|([\r\n]+)|([\+])|([\-])|([\*])|([\/])/g;
+  const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
+
+  function tokenize(source) {
+    let result = null;
+    let lastIndex = 0;
+
+    do {
+      lastIndex = reg.lastIndex;
+      result = reg.exec(source);
+      if (!result) break;
+      for (let i = 0; i < dictionary.length; i++) {
+        if (result[i + 1]) {
+          console.log();
+        }
+      }
+    } while(result);
+  }
+
+  tokenize('1024 + 10 * 25');
+</script>

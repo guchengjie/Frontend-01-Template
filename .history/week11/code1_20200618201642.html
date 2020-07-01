@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>红绿灯问题</title>
+  <style>
+    .box {
+      width: 500px;
+      height: 200px;
+    }
+    .box div {
+      width: 100px;
+      height: 100px;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div id="red"></div>
+    <div id="yellow"></div>
+    <div id="green"></div>
+  </div>
+  <script>
+    window.onload = function() {
+      let lock = 0;
+      setInterval(() => {
+        lock++;
+        if (lock < 10) {
+          callGreen();
+        } else if (lock < 12) {
+          callYellow();
+        } else if (lock < 17) {
+          lock = 0;
+          callRed();
+        }
+      });
+
+      function callGreen() {
+        const dom = document.getElementById('green');
+        dom.style.background = 'green';
+      }
+      function callYellow() {
+        const dom = document.getElementById('yellow');
+        dom.style.background = 'yellow';
+      }
+      function callRed() {
+        const dom = document.getElementById('red');
+        dom.style.background = 'red';
+      }
+    }
+  </script>
+</body>
+</html>
