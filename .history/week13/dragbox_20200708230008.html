@@ -36,7 +36,7 @@
   box box box box box box box box box box box box box box
   box box box box box box box box box box box box box box
 </div>
-<div id="dragbox" style="width:100px; height: 100px;display: inline-block;background: pink;" ></div>
+<div id="dragbox" style="width:100px; height: 100px;background: pink;" ></div>
 
 <script>
   window.onload = function() {
@@ -49,8 +49,7 @@
       const move = (e) => {
         const clientX = e.clientX;
         const clientY = e.clientY;
-        const range = nearest(clientX, clientY);
-        range.insertNode(dragbox);
+        nearest();
         // dragbox.style.transform = `translate(${base[0] + clientX - startX}px, ${base[1] + clientY - startY}px)`;
       };
       const up = (e) => {
