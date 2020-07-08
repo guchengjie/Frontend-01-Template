@@ -1,0 +1,21 @@
+<div id="dragbox" style="width:100px; height: 100px;background: pink;" ></div>
+
+<script>
+  window.onload = function() {
+    const dragbox = document.getElementById('dragbox');
+
+    dragbox.addEventListener('mousedown', (event) => {
+      const move = (event) => {
+        const clientX = event.clientX;
+        const clientY = event.clientY;
+        dragbox.style.transform = `translate(${clientX}, ${clientY})`;
+      };
+      const up = (event) => {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up); 
+      };
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up); 
+    })
+  }
+</script>

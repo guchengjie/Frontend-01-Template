@@ -1,0 +1,14 @@
+<div id="dragbox" style="width:100px; height: 100px;background: pink;" ></div>
+
+<script>
+  window.onload = function() {
+    const dragbox = document.getElementById('dragbox');
+
+    dragbox.addEventListener('mousedown', () => {
+      const move = () => {};
+      const up = () => {};
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up); 
+    })
+  }
+</script>
