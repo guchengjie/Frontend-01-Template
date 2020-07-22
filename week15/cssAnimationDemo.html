@@ -1,0 +1,24 @@
+<style>
+  #el {
+    width: 100px;
+    height: 100px;
+    background: skyblue;
+  }
+</style>
+<div id="el"></div>
+<script>
+  let el = document.getElementById('el');
+  el.style.transition = 'ease 5s';
+
+  function start() {
+    el.style.transform = 'translate(500px, 500px)';
+  }
+
+  function end() {
+    const { x, y } = el.getBoundingClientRect();
+    el.style.transition = 'none';
+    el.style.transform = `translate(${x}px, ${y}px)`; // getCompitedStyle方法获取的样式值是最后的状态
+    console.log(getComputedStyle(el).transform);
+  }
+
+</script>

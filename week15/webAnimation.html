@@ -1,0 +1,42 @@
+<style>
+  #rabbit {
+    background: url('http://rachelnabors.com/alice-in-videoland/book/img/bg_park5_1.png') no-repeat 0 0 / 100% auto;
+    height: 500px;
+    width: 500px;
+  }
+</style>
+<div id="rabbit">
+</div>
+<script>
+  const whiteRabbit = document.getElementById("rabbit");
+  const rabbitDownKeyframes = new KeyframeEffect(
+    whiteRabbit,
+    [{
+        transform: 'translateY(0%)'
+      },
+      {
+        transform: 'translateY(100%)'
+      }
+    ], {
+      duration: 3000,
+      fill: 'forwards'
+    }
+  );
+
+  const rabbitDownAnimation = new Animation(rabbitDownKeyframes, document.timeline);
+
+  // On tap or click,
+  whiteRabbit.addEventListener("mousedown", downHeGoes, false);
+  whiteRabbit.addEventListener("touchstart", downHeGoes, false);
+
+  // Trigger a single-fire animation
+  function downHeGoes(event) {
+
+    // Remove those event listeners
+    whiteRabbit.removeEventListener("mousedown", downHeGoes, false);
+    whiteRabbit.removeEventListener("touchstart", downHeGoes, false);
+
+    // Play rabbit animation
+    rabbitDownAnimation.play();
+  }
+</script>
