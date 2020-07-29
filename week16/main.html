@@ -1,0 +1,12 @@
+<body>
+  hello world
+</body>
+<script src="./gesture.js"></script>
+<script>
+
+  enableGesture(document.body);
+
+  document.body.addEventListener('tap', event => {
+    console.log('tap');
+  })
+</script>
