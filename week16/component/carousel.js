@@ -29,7 +29,6 @@ export class Carousel {
       let offset = 0;
 
       const handlerStart = () => {
-        console.log('----start----');
         this.timeline.pause();
         window.clearTimeout(this.stopPlay);
 
@@ -41,7 +40,6 @@ export class Carousel {
       }
 
       const handlerPan = (event) => {
-        console.log('----pan----');
         let last = children[lastPosition];
         let current = children[currentPosition];
         let next = children[nextPosition];
@@ -57,13 +55,17 @@ export class Carousel {
         next.style.transform = `translateX(${nextTransformVal + dx}px)`;
       }
 
-      const handlerPanend = (e) => {
+      const handlerPanend = (event) => {
         let offset = 0;
-        if (e.clientX - e.startX > 250) {
+        let direction = 0;
+        if (event.clientX - event.startX > 250) {
           offset = 1;
-        } else if (e.clientX - e.startX < -250) {
+        } else if (event.clientX - event.startX < -250) {
           offset = -1;
         }
+
+        // timeline.reset();
+        // timeline.start();
 
         let last = children[lastPosition];
         let current = children[currentPosition];
@@ -189,10 +191,6 @@ export class Carousel {
   }
 
   mountTo(parent) {
-    this.slot = <div></div>;
-    for (let child of this.children) {
-      this.slot.appendChild(child);
-    }
     this.render().mountTo(parent);
   }
 }

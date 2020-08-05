@@ -36,6 +36,10 @@ export class Text {
     this.root = document.createTextNode(text);
   }
 
+  getAttribute(name) {
+    return null;
+  }
+
   mountTo(parent) {
     parent.appendChild(this.root);
   }
@@ -51,12 +55,24 @@ export class Wrapper {
     this.children.push(child);
   }
 
+  getAttribute(name) {
+    return this.root.getAttribute(name);
+  }
+
   addEventListener() {
     this.root.addEventListener(...arguments);
   }
 
   get style() {
     return this.root.style;
+  }
+
+  set innerText(text) {
+    return this.root.innerText = text;
+  }
+
+  set classList(list) {
+    return this.root.classList = list;
   }
 
   setAttribute(name, value) {

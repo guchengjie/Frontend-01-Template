@@ -55,7 +55,6 @@ export const enableGesture = function (element) {
   // 监听  -->  识别  -->  分发
 
   let start = (point, context) => {
-    // console.log('start', point.clientX, point.clientY);
     element.dispatchEvent(new CustomEvent('start'), {
       startX: point.clientX,
       startY: point.clientY,
@@ -128,7 +127,8 @@ export const enableGesture = function (element) {
       let speed = Math.sqrt((record.dx - dx) ** 2 + (record.dy - dy) ** 2) / (Date.now() - record.t);
       
       if (speed > 2.5) {
-        console.log('flick');
+        element.dispatchEvent(Object.assign(new CustomEvent('flick'), {
+        }));
       }
       element.dispatchEvent(Object.assign(new CustomEvent('panend'), {
         startX: context.startX,

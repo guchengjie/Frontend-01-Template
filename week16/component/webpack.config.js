@@ -30,6 +30,12 @@ module.exports = {
           loader: require.resolve('./loader.js'),
         },
       },
+      {
+        test: /\.css$/,
+        use: {
+          loader: require.resolve('./css-loader.js'),
+        },
+      },
     ],
   },
   devServer: {
