@@ -1,0 +1,25 @@
+{
+  "name": "html-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "coverage": "nyc mocha"
+  },
+  "keywords": [],
+  "author": "mrgu <1147773200@qq.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@babel/core": "^7.11.1",
+    "@babel/register": "^7.10.5",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
+    "babel-plugin-istanbul": "^6.0.0",
+    "mocha": "^8.1.1",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.11.0"
+  }
+}

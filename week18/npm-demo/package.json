@@ -1,0 +1,9 @@
+{
+  "name": "npm-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "npm": "^6.14.7"
+  }
+}
