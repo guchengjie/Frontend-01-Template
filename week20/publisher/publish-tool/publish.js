@@ -2,7 +2,7 @@ const http = require('http');
 const querystring = require('querystring');
 const archiver = require('archiver');
 const fs = require('fs');
-const child_Process = require('child_process');
+const child_process = require('child_process');
 
 let packname = './package';
 
@@ -42,9 +42,22 @@ let packname = './package';
   archive.on('end', () => {
     console.error('request end');
     req.end();
-    let redirect_uri = encodeURIComponent('http://localhost:8081/auth');
-    child_Process('exec open ')
+    let redirect_uri = encodeURIComponent('http://localhost:8091/auth');
+    let url = `https://github.com/login/oauth/authorize?client_id=Iv1.832c7795ac17f136&redirect_uri=${redirect_uri}&state=abs123&scope=read%3Auser`;
+    switch (process.platform) {
+      //mac系统使用 一下命令打开url在浏览器
+      case "darwin":
+        child_process.exec(`open ${url}`);
+      //win系统使用 一下命令打开url在浏览器
+      case "win32":
+        child_process.exec(`start ${url}`);
+          // 默认mac系统
+      default:
+        child_process.exec(`open ${url}`);
+    }
   });
+
+
 
   // let readStream = fs.createReadStream(packname);
   // readStream.pipe(req);

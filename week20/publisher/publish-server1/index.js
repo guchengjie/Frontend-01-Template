@@ -4,7 +4,7 @@ const unzip = require('unzipper');
 const https = require('https');
 
 const server = http.createServer((req, res) => {
-  // let matched = req.url.match(/filename=([^&]+)/);
+  if (req.url.match(/^\/auth/)) return auth(req, res);
   // let filename = matched && matched[1];
   // if (!filename) return;
 
