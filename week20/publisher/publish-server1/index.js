@@ -37,7 +37,7 @@ function auth(req, res) {
   let state = 'abc123';
   let client_secret = '4a8f2ff77783660040768099c10165345ff60f0a';
   let client_id = 'Iv1.832c7795ac17f136'
-  let redirect_uri = encodeURIComponent('http://locahost:8091/auth');
+  let redirect_uri = encodeURIComponent('http://localhost:8091/auth');
 
   let params = `code=${code}&state=${state}&client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}`;
   let url = `https://github.com/login/oauth/access_token`;
@@ -45,16 +45,32 @@ function auth(req, res) {
   const options = {
     hostname: 'github.com',
     port: 443,
-    path: '/login/oauth/access_token',
+    path: `/login/oauth/access_token?${params}`,
     method: 'POST'
   };
 
-  https.request(options, {
-    method: 'POST'
+  const request = https.request(options, (res) => {
+    res.on('data', (d) => {
+      let result = d.toString().match(/access_token=([^&]+)/);
+      if (result) {
+        let token = result[1];
+        res.writeHead(200, {
+          access_token: token,
+          'Content-Type': 'text/plain',
+        });
+        res.end('ok');
+      } else {
+        res.writeHead(200, {
+          'Content-Type': 'text/plain',
+        });
+        res.end('error');
+      }
+    })
   })
 
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end();
+  request.on('error', (err) => {
+    console.log(err);
+  })
 }
 
 server.listen(8091);
